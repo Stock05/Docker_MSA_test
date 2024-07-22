@@ -1,3 +1,7 @@
 [submodule "pdf_chatbot"]
 	path = pdf_chatbot
 	url = https://github.com/likelionT6aiproject/pdf_chatbot.git
+
+[submodule "ai_webpage"]
+	path = ai_webpage
+	url = https://github.com/likelionT6aiproject/ai_webpage.git
