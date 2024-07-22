@@ -1,0 +1,3 @@
+[submodule "pdf_chatbot"]
+	path = frontend
+	url = https://github.com/likelionT6aiproject/pdf_chatbot.git
