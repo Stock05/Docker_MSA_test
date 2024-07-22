@@ -5,3 +5,4 @@
 [submodule "ai_webpage"]
 	path = ai_webpage
 	url = https://github.com/likelionT6aiproject/ai_webpage.git
+	branch = junho
