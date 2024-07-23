@@ -13,12 +13,24 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-  ai_webpage:
+  # ai_webpage:
+  #   build:
+  #     context: ./ai_webpage
+  #   ports:
+  #     - "8000:8000"
+  #   command: gunicorn config.wsgi:application --bind 0.0.0.0:8000
+  #   env_file:
+  #     - .env
+  #   depends_on:
+  #     - db
+  #   networks:
+  #     - app-network
+
+  pdf_chatbot:
     build:
-      context: ./ai_webpage
+      context: ./pdf_chatbot
     ports:
-      - "8000:8000"
-    command: gunicorn config.wsgi:application --bind 0.0.0.0:8000
+      - "8001:8000"
     env_file:
       - .env
     depends_on:
@@ -26,11 +38,12 @@ services:
     networks:
       - app-network
 
-  pdf_chatbot:
+  ai_summary:
     build:
-      context: ./pdf_chatbot
+      context: ./ai_summary
     ports:
-      - "8001:8000"
+      - "8002:8000"
+    command: gunicorn config.wsgi:application --bind 0.0.0.0:8000
     env_file:
       - .env
     depends_on:
