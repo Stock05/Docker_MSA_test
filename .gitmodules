@@ -1,13 +1,19 @@
-[submodule "pdf_chatbot"]
-	path = pdf_chatbot
-	url = https://github.com/likelionT6aiproject/pdf_chatbot.git
-	
 [submodule "AI_Summary"]
 	path = AI_Summary
 	url = https://github.com/likelionT6aiproject/AI_Summary.git
+	
 [submodule "AI_cover"]
 	path = AI_cover
 	url = https://github.com/likelionT6aiproject/AI_cover.git
+
 [submodule "ai_image"]
 	path = ai_image
 	url = https://github.com/likelionT6aiproject/ai_image.git
+	
+[submodule "webpage_demo"]
+	path = webpage_demo
+	url = https://github.com/likelionT6aiproject/webpage_demo.git
+	
+[submodule "pdf_chatbot"]
+	path = pdf_chatbot
+	url = https://github.com/likelionT6aiproject/pdf_chatbot.git
