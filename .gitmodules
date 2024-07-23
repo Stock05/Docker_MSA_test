@@ -5,3 +5,9 @@
 [submodule "AI_Summary"]
 	path = AI_Summary
 	url = https://github.com/likelionT6aiproject/AI_Summary.git
+[submodule "AI_cover"]
+	path = AI_cover
+	url = https://github.com/likelionT6aiproject/AI_cover.git
+[submodule "ai_image"]
+	path = ai_image
+	url = https://github.com/likelionT6aiproject/ai_image.git
