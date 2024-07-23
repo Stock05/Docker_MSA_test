@@ -40,7 +40,7 @@ services:
 
   ai_summary:
     build:
-      context: ./ai_summary
+      context: ./AI_Summary
     ports:
       - "8002:8000"
     command: gunicorn config.wsgi:application --bind 0.0.0.0:8000
@@ -53,7 +53,7 @@ services:
 
   ai_cover:
     build:
-      context: ./ai_cover
+      context: ./AI_cover
     ports:
       - "8003:8000"
     command: gunicorn AI_cover.wsgi:application --bind 0.0.0.0:8000
