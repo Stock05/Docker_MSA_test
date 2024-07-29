@@ -1,4 +1,4 @@
-name: Deploy Django to NCP with Git22
+name: Deploy Django to NCP with Git
 
 on:
   push:
@@ -23,13 +23,17 @@ jobs:
           expect {
             "password:" {
               send "${{ secrets.NCP_PASSWORD }}\r"
+              exp_continue
             }
             "Warning: Permanently added" {
               exp_continue
             }
-          }
-          expect {
-            "*Permission denied*" { exit 1 }
+            "*Welcome to*" {
+              exp_continue
+            }
+            "*Last login:*" {
+              exp_continue
+            }
             "*$ " {
               send_user "Logged in successfully\n"
               send "cd /home/test/Docker_MSA_test\r"
