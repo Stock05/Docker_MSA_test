@@ -1,4 +1,4 @@
-name: Deploy Django to NCP with Git2
+name: Deploy Django to NCP with Git
 
 on:
   push:
@@ -21,26 +21,35 @@ jobs:
           log_user 1
           spawn ssh -o StrictHostKeyChecking=no -l ${{ secrets.NCP_USER }} -p ${{ secrets.NCP_PORT }} ${{ secrets.NCP_ADDRESS }}
           expect "password:"
-          send "$${{ secrets.NCP_PASSWORD }}\r"
+          send "${{ secrets.NCP_PASSWORD }}\r"
           expect {
             "*Permission denied*" { exit 1 }
             "*$ " {
+              send_user "Logged in successfully\n"
               send "cd /home/test/Docker_MSA_test\r"
               expect "$ "
+              send_user "Changed directory\n"
               send "sudo chown -R $USER:$USER .\r"
               expect "$ "
+              send_user "Changed ownership\n"
               send "sudo chmod -R 755 .\r"
               expect "$ "
+              send_user "Changed permissions\n"
               send "git config --global --add safe.directory /home/test/Docker_MSA_test\r"
               expect "$ "
+              send_user "Configured git\n"
               send "git pull --recurse-submodules=on-demand origin main\r"
               expect "$ "
+              send_user "Pulled latest code\n"
               send "sudo docker-compose build\r"
               expect "$ "
+              send_user "Built docker images\n"
               send "sudo docker-compose down\r"
               expect "$ "
+              send_user "Stopped docker containers\n"
               send "sudo docker-compose up -d\r"
               expect "$ "
+              send_user "Started docker containers\n"
               send "exit\r"
               expect eof
             }
