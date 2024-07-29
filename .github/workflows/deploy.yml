@@ -20,8 +20,14 @@ jobs:
         expect <<- EOF
           log_user 1
           spawn ssh -o StrictHostKeyChecking=no -l ${{ secrets.NCP_USER }} -p ${{ secrets.NCP_PORT }} ${{ secrets.NCP_ADDRESS }}
-          expect "password:"
-          send "${{ secrets.NCP_PASSWORD }}\r"
+          expect {
+            "password:" {
+              send "${{ secrets.NCP_PASSWORD }}\r"
+            }
+            "Warning: Permanently added" {
+              exp_continue
+            }
+          }
           expect {
             "*Permission denied*" { exit 1 }
             "*$ " {
