@@ -1,0 +1,25 @@
+name: Deploy Django to NCP with Git
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup SSH Keys
+      uses: webfactory/ssh-agent@v0.9.0
+      with:
+        ssh-private-key: ${{ secrets.NCP_SSH }}
+
+    - name: Test SSH Connection
+      run: |
+        ssh -o StrictHostKeyChecking=no -p ${{ secrets.NCP_PORT }} ${{ secrets.NCP_HOST }}@${{ secrets.NCP_ADDRESS }} << 'EOF'
+          echo "SSH connection successful!"
+        EOF
+        
