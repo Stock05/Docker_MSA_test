@@ -1,4 +1,4 @@
-name: Deploy Django to NCP with Git
+name: Deploy
 
 on:
   push:
@@ -8,60 +8,25 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Install expect
-      run: sudo apt-get install -y expect
+    - name: Set up SSH
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-    - name: Sync and Deploy
+    - name: Deploy to server
       run: |
-        expect <<- EOF
-          log_user 1
-          spawn ssh -o StrictHostKeyChecking=no -l ${{ secrets.NCP_USER }} -p ${{ secrets.NCP_PORT }} ${{ secrets.NCP_ADDRESS }}
-          expect {
-            "password:" {
-              send "${{ secrets.NCP_PASSWORD }}\r"
-              exp_continue
-            }
-            "Warning: Permanently added" {
-              exp_continue
-            }
-            "*Welcome to*" {
-              exp_continue
-            }
-            "*Last login:*" {
-              exp_continue
-            }
-            "*$ " {
-              send_user "Logged in successfully\n"
-              send "cd /home/test/Docker_MSA_test\r"
-              expect "$ "
-              send_user "Changed directory\n"
-              send "sudo chown -R $USER:$USER .\r"
-              expect "$ "
-              send_user "Changed ownership\n"
-              send "sudo chmod -R 755 .\r"
-              expect "$ "
-              send_user "Changed permissions\n"
-              send "git config --global --add safe.directory /home/test/Docker_MSA_test\r"
-              expect "$ "
-              send_user "Configured git\n"
-              send "git pull --recurse-submodules=on-demand origin main\r"
-              expect "$ "
-              send_user "Pulled latest code\n"
-              send "sudo docker-compose build\r"
-              expect "$ "
-              send_user "Built docker images\n"
-              send "sudo docker-compose down\r"
-              expect "$ "
-              send_user "Stopped docker containers\n"
-              send "sudo docker-compose up -d\r"
-              expect "$ "
-              send_user "Started docker containers\n"
-              send "exit\r"
-              expect eof
-            }
-          }
+        ssh -o StrictHostKeyChecking=no -l ${{ secrets.SSH_USER }} -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} << 'EOF'
+          cd /home/test/Docker_MSA_test
+          sudo chown -R $USER:$USER .
+          sudo chmod -R 755 .
+          git config --global --add safe.directory /home/test/Docker_MSA_test
+          git pull --recurse-submodules=on-demand origin main
+          sudo docker-compose build
+          sudo docker-compose down
+          sudo docker-compose up -d
         EOF
