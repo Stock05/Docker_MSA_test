@@ -19,7 +19,7 @@ jobs:
 
     - name: Sync and Deploy
       run: |
-        ssh -o StrictHostKeyChecking=no -l ${{ secrets.NCP_USER }} -p ${{ secrets.NCP_PORT }} ${{ secrets.NCP_ADDRESS }} << 'EOF'
+        ssh -o StrictHostKeyChecking=no -l ${{ secrets.NCP_HOST }} -p ${{ secrets.NCP_PORT }} ${{ secrets.NCP_ADDRESS }} << 'EOF'
           cd /home/test/Docker_MSA_test
           sudo chown -R $USER:$USER .
           sudo chmod -R 755 .
