@@ -15,14 +15,28 @@ jobs:
     - name: Install expect
       run: sudo apt-get install -y expect
 
-    - name: Test SSH Connection
+    - name: Sync and Deploy
       run: |
         expect <<- EOF
           spawn ssh -o StrictHostKeyChecking=no -p ${{ secrets.NCP_PORT }} ${{ secrets.NCP_HOST }}@${{ secrets.NCP_ADDRESS }}
           expect "password:"
           send "$${{ secrets.NCP_PASSWORD }}\r"
           expect "$ "
-          send "echo 'SSH connection successful!'\r"
+          send "cd /home/test/Docker_MSA_test\r"
+          expect "$ "
+          send "sudo chown -R $USER:$USER .\r"
+          expect "$ "
+          send "sudo chmod -R 755 .\r"
+          expect "$ "
+          send "git config --global --add safe.directory /home/test/Docker_MSA_test\r"
+          expect "$ "
+          send "git pull --recurse-submodules=on-demand origin main\r"
+          expect "$ "
+          send "sudo docker-compose build\r"
+          expect "$ "
+          send "sudo docker-compose down\r"
+          expect "$ "
+          send "sudo docker-compose up -d\r"
           expect "$ "
           send "exit\r"
           expect eof

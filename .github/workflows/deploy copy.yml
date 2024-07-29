@@ -1,0 +1,29 @@
+name: Deploy Django to NCP with Git
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install expect
+      run: sudo apt-get install -y expect
+
+    - name: Test SSH Connection
+      run: |
+        expect <<- EOF
+          spawn ssh -o StrictHostKeyChecking=no -p ${{ secrets.NCP_PORT }} ${{ secrets.NCP_HOST }}@${{ secrets.NCP_ADDRESS }}
+          expect "password:"
+          send "$${{ secrets.NCP_PASSWORD }}\r"
+          expect "$ "
+          send "echo 'SSH connection successful!'\r"
+          expect "$ "
+          send "exit\r"
+          expect eof
+        EOF
