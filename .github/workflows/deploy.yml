@@ -12,36 +12,20 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Install expect
-      run: sudo apt-get install -y expect
+    - name: Setup SSH Keys
+      uses: webfactory/ssh-agent@v0.9.0
+      with:
+        ssh-private-key: ${{ secrets.NCP_SSH }}
 
     - name: Sync and Deploy
       run: |
-        expect <<- EOF
-          spawn ssh -o StrictHostKeyChecking=no -p ${{ secrets.NCP_PORT }} ${{ secrets.NCP_HOST }}@${{ secrets.NCP_ADDRESS }}
-          expect "password:"
-          send "$${{ secrets.NCP_PASSWORD }}\r"
-          expect {
-            "*Permission denied*" { exit 1 }
-            "*$ " {
-              send "cd /home/test/Docker_MSA_test\r"
-              expect "$ "
-              send "sudo chown -R $USER:$USER .\r"
-              expect "$ "
-              send "sudo chmod -R 755 .\r"
-              expect "$ "
-              send "git config --global --add safe.directory /home/test/Docker_MSA_test\r"
-              expect "$ "
-              send "git pull --recurse-submodules=on-demand origin main\r"
-              expect "$ "
-              send "sudo docker-compose build\r"
-              expect "$ "
-              send "sudo docker-compose down\r"
-              expect "$ "
-              send "sudo docker-compose up -d\r"
-              expect "$ "
-              send "exit\r"
-              expect eof
-            }
-          }
+        ssh -o StrictHostKeyChecking=no -p ${{ secrets.NCP_PORT }} ${{ secrets.NCP_USER }}@${{ secrets.NCP_ADDRESS }} << 'EOF'
+          cd /home/test/Docker_MSA_test
+          sudo chown -R $USER:$USER .
+          sudo chmod -R 755 .
+          git config --global --add safe.directory /home/test/Docker_MSA_test
+          git pull --recurse-submodules=on-demand origin main
+          sudo docker-compose build
+          sudo docker-compose down
+          sudo docker-compose up -d
         EOF
