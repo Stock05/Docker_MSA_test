@@ -27,6 +27,7 @@ jobs:
           git stash
           git config --global --add safe.directory /home/test/Docker_MSA_test
           git pull --recurse-submodules=on-demand origin main
+           git submodule update --init --recursive
           sudo docker-compose build
           sudo docker-compose down
           sudo docker-compose up -d
