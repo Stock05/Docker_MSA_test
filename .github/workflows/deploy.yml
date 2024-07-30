@@ -24,6 +24,7 @@ jobs:
           cd /home/test/Docker_MSA_test
           sudo chown -R $USER:$USER .
           sudo chmod -R 755 .
+          git stash
           git config --global --add safe.directory /home/test/Docker_MSA_test
           git pull --recurse-submodules=on-demand origin main
           sudo docker-compose build
